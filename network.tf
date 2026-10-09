@@ -83,7 +83,7 @@ resource "aws_route" "private_nat" {
 
   route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = try(aws_nat_gateway.this[count.index].id, null)
+  nat_gateway_id         = var.nat_gateway_count == 1 ? aws_nat_gateway.this[0].id : aws_nat_gateway.this[count.index].id
 }
 
 resource "aws_route_table_association" "private" {
