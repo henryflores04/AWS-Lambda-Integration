@@ -1,5 +1,23 @@
+# ── Terraform ──────────────────────────────────────────────────────────
 .terraform/
 *.tfstate
 *.tfstate.*
 terraform.tfstate.d/
 terraform.tfvars
+*.tfplan
+crash.log
+
+# ── Dependencias de las Lambdas ────────────────────────────────────────
+# Se regeneran con: .\build.ps1  (o ./build.sh)
+node_modules/
+
+# ── Artefactos de empaquetado ──────────────────────────────────────────
+# Zips generados por data.archive_file
+build/
+*.tar
+
+# ── Sistema operativo y editores ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

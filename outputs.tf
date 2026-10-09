@@ -1,4 +1,3 @@
-# ── Identidad del entorno ──────────────────────────────────────────────
 output "environment" {
   description = "Entorno desplegado (workspace de Terraform)"
   value       = terraform.workspace
@@ -14,7 +13,6 @@ output "aws_account_id" {
   value       = data.aws_caller_identity.current.account_id
 }
 
-# ── URL del proyecto (va en el README) ─────────────────────────────────
 output "api_invoke_url" {
   description = "URL para invocar POST /upload. Esta es la URL del proyecto."
   value       = "${aws_apigatewayv2_stage.this.invoke_url}/upload"
@@ -25,7 +23,6 @@ output "api_id" {
   value       = aws_apigatewayv2_api.this.id
 }
 
-# ── Almacenamiento ─────────────────────────────────────────────────────
 output "bucket_name" {
   description = "Nombre del bucket S3 de imagenes"
   value       = aws_s3_bucket.images.id
@@ -36,7 +33,6 @@ output "bucket_arn" {
   value       = aws_s3_bucket.images.arn
 }
 
-# ── Mensajeria ─────────────────────────────────────────────────────────
 output "main_queue_url" {
   description = "URL de la cola principal"
   value       = aws_sqs_queue.main.id
@@ -52,7 +48,6 @@ output "dlq_url" {
   value       = aws_sqs_queue.dlq.id
 }
 
-# ── Computo ────────────────────────────────────────────────────────────
 output "upload_lambda_name" {
   description = "Nombre de upload-lambda"
   value       = aws_lambda_function.upload.function_name
@@ -63,7 +58,6 @@ output "crop_lambda_name" {
   value       = aws_lambda_function.crop.function_name
 }
 
-# ── Red ────────────────────────────────────────────────────────────────
 output "vpc_id" {
   description = "ID de la VPC"
   value       = aws_vpc.this.id
@@ -74,11 +68,6 @@ output "private_subnet_ids" {
   value       = aws_subnet.private[*].id
 }
 
-# ── Guarda de coherencia entorno/workspace ─────────────────────────────
-# Aborta el plan si el valor de `environment` del -var-file no coincide con
-# el workspace activo. Evita el caso peligroso de aplicar dev.tfvars estando
-# en el workspace prod (o al reves), que crearia recursos con el nombre de un
-# entorno y la configuracion de otro.
 output "entorno_validado" {
   description = "Confirma que el workspace y el -var-file son coherentes"
   value       = "${terraform.workspace} (${var.environment})"
@@ -89,7 +78,6 @@ output "entorno_validado" {
   }
 }
 
-# ── Instrucciones de prueba (aparecen al terminar el apply) ────────────
 output "test_command" {
   description = "Comando listo para probar la subida"
   value       = <<-EOT

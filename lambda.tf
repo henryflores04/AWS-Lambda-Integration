@@ -40,9 +40,6 @@ resource "aws_lambda_function" "upload" {
     Name = local.upload_lambda_name
   }
 
-  # Sin esto, Terraform podria crear la funcion antes que su log group.
-  # Lambda crearia entonces el log group con retencion infinita, y el
-  # aws_cloudwatch_log_group posterior fallaria con ResourceAlreadyExists.
   depends_on = [aws_cloudwatch_log_group.upload_lambda]
 }
 

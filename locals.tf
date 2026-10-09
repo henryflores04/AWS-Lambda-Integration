@@ -14,9 +14,6 @@ locals {
 
   env = local.env_table[terraform.workspace]
 
-  # Compara el -var-file que se paso con el workspace activo.
-  # Se usa como precondition en outputs.tf para ABORTAR el plan si no coinciden.
-  # Protege contra el caso peligroso: workspace "prod" con dev.tfvars.
   env_matches_workspace = var.environment == terraform.workspace
 
   name_prefix = "${var.project_name}-${var.environment}"

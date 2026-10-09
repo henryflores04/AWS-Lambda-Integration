@@ -1,4 +1,3 @@
-# Cuenta AWS actual. Se usa en outputs.tf como evidencia para el PDF.
 data "aws_caller_identity" "current" {}
 
 terraform {
