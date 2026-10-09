@@ -74,6 +74,21 @@ output "private_subnet_ids" {
   value       = aws_subnet.private[*].id
 }
 
+# ── Guarda de coherencia entorno/workspace ─────────────────────────────
+# Aborta el plan si el valor de `environment` del -var-file no coincide con
+# el workspace activo. Evita el caso peligroso de aplicar dev.tfvars estando
+# en el workspace prod (o al reves), que crearia recursos con el nombre de un
+# entorno y la configuracion de otro.
+output "entorno_validado" {
+  description = "Confirma que el workspace y el -var-file son coherentes"
+  value       = "${terraform.workspace} (${var.environment})"
+
+  precondition {
+    condition     = local.env_matches_workspace
+    error_message = "DESALINEADO: el workspace activo es '${terraform.workspace}' pero el -var-file declara environment='${var.environment}'. Ejecuta 'terraform workspace select ${var.environment}' antes de continuar."
+  }
+}
+
 # ── Instrucciones de prueba (aparecen al terminar el apply) ────────────
 output "test_command" {
   description = "Comando listo para probar la subida"
