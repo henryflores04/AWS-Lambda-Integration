@@ -21,3 +21,9 @@ build/
 Thumbs.db
 .vscode/
 .idea/
+
+# ── Archivos de prueba del pipeline ────────────────────────────────────
+# Imagenes de prueba, body JSON generado por test-pipeline.ps1
+prueba.png
+circular.png
+body.json

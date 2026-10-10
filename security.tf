@@ -12,13 +12,13 @@ resource "aws_security_group" "lambda_upload" {
   }
 }
 
-resource "aws_vpc_security_group_egress_rule" "upload_to_s3" {
-  security_group_id            = aws_security_group.lambda_upload.id
-  description                  = "HTTPS hacia el S3 Gateway Endpoint"
-  ip_protocol                  = "tcp"
-  from_port                    = 443
-  to_port                      = 443
-  referenced_security_group_id = aws_security_group.vpce_sqs.id
+resource "aws_vpc_security_group_egress_rule" "upload_https" {
+  security_group_id = aws_security_group.lambda_upload.id
+  description       = "HTTPS saliente hacia S3 y servicios de AWS"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 resource "aws_security_group" "lambda_crop" {
@@ -35,13 +35,13 @@ resource "aws_security_group" "lambda_crop" {
   }
 }
 
-resource "aws_vpc_security_group_egress_rule" "crop_to_sqs" {
-  security_group_id            = aws_security_group.lambda_crop.id
-  description                  = "HTTPS hacia el SQS Interface Endpoint"
-  ip_protocol                  = "tcp"
-  from_port                    = 443
-  to_port                      = 443
-  referenced_security_group_id = aws_security_group.vpce_sqs.id
+resource "aws_vpc_security_group_egress_rule" "crop_https" {
+  security_group_id = aws_security_group.lambda_crop.id
+  description       = "HTTPS saliente hacia S3, SQS y servicios de AWS"
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
 }
 
 resource "aws_security_group" "vpce_sqs" {

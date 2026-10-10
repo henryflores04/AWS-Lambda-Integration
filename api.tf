@@ -31,6 +31,14 @@ resource "aws_apigatewayv2_route" "upload" {
   target    = "integrations/${aws_apigatewayv2_integration.upload.id}"
 }
 
+resource "aws_lambda_permission" "apigw_upload" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.upload.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.this.execution_arn}/*/*"
+}
+
 resource "aws_apigatewayv2_stage" "this" {
   api_id      = aws_apigatewayv2_api.this.id
   name        = "$default"

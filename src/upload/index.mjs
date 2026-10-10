@@ -79,28 +79,48 @@ export const handler = async (event) => {
 };
 
 function parseBody(event) {
-  let body = event.body;
+  const raw = event.body;
 
-  if (event.isBase64Encoded && body) {
-    body = Buffer.from(body, "base64").toString("utf8");
-  }
+  if (!raw) return null;
 
-  if (!body) return null;
+  // API Gateway HTTP API v2 puede entregar el body como texto plano o
+  // codificado en base64, y el flag isBase64Encoded NO siempre es fiable.
+  // Por eso intentamos ambos caminos y nos quedamos con el que produzca
+  // un JSON valido con el campo data.
+  const parsed = parseJson(raw) || parseJson(decodeBase64(raw));
 
-  let parsed;
-  try {
-    parsed = JSON.parse(body);
-  } catch {
-    return null;
-  }
-
-  if (!parsed.data) return null;
+  if (!parsed || !parsed.data) return null;
 
   return {
     filename: parsed.filename || "archivo",
     contentType: parsed.contentType || "image/png",
     buffer: Buffer.from(parsed.data, "base64"),
   };
+}
+
+function parseJson(value) {
+  if (!value) return null;
+
+  const text = typeof value === "string" ? value : value.toString("utf8");
+
+  try {
+    const result = JSON.parse(text);
+    return result && typeof result === "object" ? result : null;
+  } catch {
+    return null;
+  }
+}
+
+function decodeBase64(value) {
+  if (!value) return null;
+
+  const text = typeof value === "string" ? value : value.toString("utf8");
+
+  try {
+    return Buffer.from(text, "base64").toString("utf8");
+  } catch {
+    return null;
+  }
 }
 
 function respond(statusCode, payload) {
